@@ -704,7 +704,7 @@
             <!-- fails todo
             <exclude>org/jboss/resteasy/test/response/HeadContentLengthTest.java</exclude>
             -->
-            
+
             <!-- fail todo (no errors no tests run) --><exclude>org/jboss/resteasy/test/response/VariantsTest.java</exclude>
 
             <!-- fail todo (no error. test does not run.  May not be handling @Rule)  --><exclude>org/jboss/resteasy/test/response/ResponseTest.java</exclude>
