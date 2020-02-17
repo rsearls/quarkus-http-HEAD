@@ -1,0 +1,1712 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.jboss.resteasy</groupId>
+  <artifactId>quarkus-http-HEAD</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <properties>
+    <compiler-plugin.version>3.8.1</compiler-plugin.version>
+    <maven.compiler.parameters>true</maven.compiler.parameters>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <quarkus-plugin.version>1.2.0.Final</quarkus-plugin.version>
+    <!-- replace ref to quarkus-universe-bom to be quarkus-bom -->
+    <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
+    <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+    <!--
+    <quarkus.platform.version>1.2.0.Final</quarkus.platform.version>
+    <quarkus.platform.version>1.3.0.Alpha1</quarkus.platform.version>
+  -->
+     <quarkus.platform.version>999-SNAPSHOT</quarkus.platform.version>
+
+    <surefire-plugin.version>2.22.1</surefire-plugin.version>
+
+    <!-- ############# properties added to orig ############## -->
+    <resteasy-version>4.5.0-SNAPSHOT</resteasy-version>
+    <dep.arquillian-bom.version>1.4.1.Final</dep.arquillian-bom.version>
+    <javax.servlet-api-version>3.1.0</javax.servlet-api-version>
+    <jboss-servlet-api_4.0_spec-version>2.0.0.Final</jboss-servlet-api_4.0_spec-version>
+    <!-- This version causes error
+        java.util.ServiceConfigurationError: org.apache.logging.log4j.spi.Provider
+        : org.apache.logging.log4j.core.impl.Log4jProvider not a subtype
+        Version upgrade fixed issue
+    <version.log4j>2.9.1</version.log4j>
+    -->
+    <version.log4j>2.10.0</version.log4j>
+    <version.io.undertow>2.0.23.Final</version.io.undertow>
+    <version.eclipse.jdt>3.5.0</version.eclipse.jdt>
+    <version.testng>6.9.9</version.testng>
+    <version.org.jboss.resteasy.tracing.api>1.0.0.Beta4</version.org.jboss.resteasy.tracing.api>
+    <version.com.fasterxml.jackson>2.10.1</version.com.fasterxml.jackson>
+    <version.org.wildfly.extras.creaper>1.6.1</version.org.wildfly.extras.creaper>
+    <version.jboss.dmr>1.5.0.Final</version.jboss.dmr>
+    <version.wildfly.controller.client>7.0.0.Final</version.wildfly.controller.client>
+    <!--
+    <version.jboss.threads>2.3.2.Final</version.jboss.threads>
+    -->
+    <version.jboss.threads>3.0.1.Final</version.jboss.threads>
+    <version.wildfly.arquillian.common>2.2.0.Final</version.wildfly.arquillian.common>
+    <version.jboss.ejb.spec>2.0.0.Final</version.jboss.ejb.spec>
+    <version.org.eclipse.aether>1.1.0</version.org.eclipse.aether>
+    <version.org.jboss.spec.javax.el.jboss-el-api_3.0_spec>2.0.0.Final</version.org.jboss.spec.javax.el.jboss-el-api_3.0_spec>
+    <version.jakarta.validation-api>2.0.2</version.jakarta.validation-api>
+    <version.org.glassfish.jakarta.el>3.0.2</version.org.glassfish.jakarta.el>
+    <version.org.hibernate.javax.persistence.hibernate-jpa-2.1-api>1.0.0.Final</version.org.hibernate.javax.persistence.hibernate-jpa-2.1-api>
+    <version.org.jboss.spec.javax.jms.jboss-jms-api_2.0_spec>2.0.0.Final</version.org.jboss.spec.javax.jms.jboss-jms-api_2.0_spec>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-bom</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- ######## additions to orig ############### -->
+      <dependency>
+        <groupId>org.jboss.arquillian</groupId>
+        <artifactId>arquillian-bom</artifactId>
+        <version>${dep.arquillian-bom.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+
+    <!-- todo 14 -->
+    <dependency>
+      <groupId>org.hibernate.javax.persistence</groupId>
+      <artifactId>hibernate-jpa-2.1-api</artifactId>
+      <version>${version.org.hibernate.javax.persistence.hibernate-jpa-2.1-api}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.jms</groupId>
+      <artifactId>jboss-jms-api_2.0_spec</artifactId>
+      <version>${version.org.jboss.spec.javax.jms.jboss-jms-api_2.0_spec}</version>
+    </dependency>
+
+    <!-- todo 13 -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-cache-core</artifactId>
+      <version>${resteasy-version}</version>
+    </dependency>
+    <!-- todo 12 -->
+    <dependency>
+      <groupId>org.wildfly.arquillian</groupId>
+      <artifactId>wildfly-arquillian-common</artifactId>
+      <version>${version.wildfly.arquillian.common}</version>
+      <exclusions>
+        <!-- force not using io.undertow:undertow-core:jar:2.0.19.Final
+              allow io.quarkus.http:quarkus-http-core:jar:3.0.2.Final
+              to be used instead
+        -->
+        <exclusion>
+          <groupId>io.undertow</groupId>
+          <artifactId>undertow-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-multipart-provider</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-atom-provider</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jackson2-provider</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-html</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-crypto</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.ejb</groupId>
+      <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+      <version>${version.jboss.ejb.spec}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-stats</artifactId>
+      <version>${resteasy-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-validator-provider</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>1.9.5</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.hamcrest</groupId>
+          <artifactId>hamcrest-core</artifactId>
+        </exclusion>
+      </exclusions>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-transport-file</artifactId>
+      <version>${version.org.eclipse.aether}</version>
+      <!-- resolves error
+         java.lang.NoSuchMethodError: org.eclipse.aether.transfer.TransferResource
+        .<init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/io/File;
+        Lorg/eclipse/aether/RequestTrace;)V
+       -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.eclipse.aether</groupId>
+          <artifactId>aether-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-transport-http</artifactId>
+      <version>${version.org.eclipse.aether}</version>
+      <!-- resolves error
+         java.lang.NoSuchMethodError: org.eclipse.aether.transfer.TransferResource
+        .<init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/io/File;
+        Lorg/eclipse/aether/RequestTrace;)V
+       -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.eclipse.aether</groupId>
+          <artifactId>aether-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Does NOT work
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-api</artifactId>
+      <version>${version.org.eclipse.aether}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-api</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+       -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-core-spi</artifactId>
+    </dependency>
+    <!--
+    <dependency>
+      <groupId>org.jboss.spec.javax.el</groupId>
+      <artifactId>jboss-el-api_3.0_spec</artifactId>
+      <version>${version.org.jboss.spec.javax.el.jboss-el-api_3.0_spec}</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <version>${version.jakarta.validation-api}</version>
+    </dependency>
+    -->
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>jakarta.el</artifactId>
+      <version>${version.org.glassfish.jakarta.el}</version>
+    </dependency>
+
+    <!-- todo 11 -->
+    <dependency>
+      <groupId>org.wildfly.core</groupId>
+      <artifactId>wildfly-controller-client</artifactId>
+      <version>${version.wildfly.controller.client}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.wildfly.core</groupId>
+      <artifactId>wildfly-cli</artifactId>
+      <version>${version.wildfly.controller.client}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.threads</groupId>
+      <artifactId>jboss-threads</artifactId>
+      <version>${version.jboss.threads}</version>
+    </dependency>
+
+
+    <!-- todo 10 -->
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jboss-dmr</artifactId>
+      <version>${version.jboss.dmr}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.wildfly.extras.creaper</groupId>
+      <artifactId>creaper-core</artifactId>
+      <version>${version.org.wildfly.extras.creaper}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpasyncclient</artifactId>
+    </dependency>
+    <!-- todo 9 -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client-microprofile</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.microprofile.rest.client</groupId>
+      <artifactId>microprofile-rest-client-api</artifactId>
+    </dependency>
+    <!-- todo 8 -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-tracing-api</artifactId>
+      <version>${version.org.jboss.resteasy.tracing.api}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${version.com.fasterxml.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-wadl</artifactId>
+      <version>${resteasy-version}</version> <!-- in the bom ${resteasy.version} -->
+    </dependency>
+    <!-- todo 7 -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-rxjava2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.reactivex.rxjava2</groupId>
+      <artifactId>rxjava</artifactId>
+    </dependency>
+
+    <!-- todo 6 required by  org/jboss/resteasy/test/asynch/AsynchBasicTest -->
+    <dependency>
+      <groupId>com.io7m.xom</groupId>
+      <artifactId>xom</artifactId>
+      <version>1.2.10</version>
+    </dependency>
+    <!-- todo 5  -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-undertow</artifactId>
+      <!-- <version>1.2.0.Final</version> -->
+    </dependency>
+
+<!-- todo 4
+    <dependency>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>org.eclipse.jdt.junit.runtime</artifactId>
+      <version>${version.eclipse.jdt}</version>
+    </dependency>
+ -->
+    <!-- required for annotation org/testng/annotations/BeforeClass in arquillian -->
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${version.testng}</version>
+    </dependency>
+
+<!-- todo 3
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
+    </dependency>
+ -->
+<!-- required for individual tests to be run -->
+    <dependency>
+      <groupId>org.jboss.arquillian.testng</groupId>
+      <artifactId>arquillian-testng-container</artifactId>
+      <version>${dep.arquillian-bom.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.arquillian.test</groupId>
+      <artifactId>arquillian-test-impl-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.core</groupId>
+      <artifactId>arquillian-core-impl-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.junit</groupId>
+      <artifactId>arquillian-junit-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${version.log4j}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${version.log4j}</version>
+    </dependency>
+    <!-- resolves java.lang.ClassNotFoundException:
+      org.glassfish.jersey.client.JerseyClientBuilder
+    -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+    </dependency>
+    <!-- resolves java.lang.NoSuchMethodError:
+      org.jboss.resteasy.core.ResteasyContext.addCloseableContextDataLevel()L
+      org/jboss/resteasy/core/ResteasyContext$CloseableContext;
+    -->
+    <!-- todo 2
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-core</artifactId>
+      </dependency>
+-->
+<!-- todo  required for tests in asynch dir-->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxb-provider</artifactId>
+    </dependency>
+
+    <!-- added for test AsynchContextualDataTest -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-json-binding-provider</artifactId>
+    </dependency>
+
+    <!-- https://github.com/quarkusio/quarkus/issues/2701
+        recommended using this
+    NOTE: only needed when using eclipse ide
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+-->
+    <!-- Quarkus - Arquillian Adapter -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-arquillian</artifactId>
+      <version>${quarkus.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy</artifactId>
+    </dependency>
+    <!-- has QuarkusTest annotation  ... not using
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+-->
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- replaces quarkus-junit5 -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>utils-arquillian-utils</artifactId>
+      <version>${resteasy-version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <!-- MUST be excluded -->
+        <exclusion>
+          <groupId>org.jboss.resteasy</groupId>
+          <artifactId>resteasy-client</artifactId>
+        </exclusion>
+        <!-- MUST be excluded -->
+        <exclusion>
+          <groupId>org.jboss.resteasy</groupId>
+          <artifactId>resteasy-validator-provider</artifactId>
+        </exclusion>
+        <!-- remove  wfly arq code .. interferes with qrk-arq  -->
+        <exclusion>
+          <groupId>org.wildfly.arquillian</groupId>
+          <artifactId>wildfly-arquillian-container-managed</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.spec.javax.servlet</groupId>
+      <artifactId>jboss-servlet-api_4.0_spec</artifactId>
+      <version>2.0.0.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-maven-plugin</artifactId>
+        <version>${quarkus-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${compiler-plugin.version}</version>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire-plugin.version}</version>
+        <configuration>
+          <systemProperties>
+            <quarkus.tester>true</quarkus.tester> <!-- required for PortProviderUtil -->
+            <org.jboss.resteasy.port>8081</org.jboss.resteasy.port>
+            <java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
+            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+          </systemProperties>
+
+          <excludes>
+            <!-- ############## summary core/basic ####################
+                dir: org/jboss/resteasy/test/core/basic
+                  21 total test
+                  13 tests ran successfully
+                      - 3 required upgrade to 1.3.0.Alpha1
+                  8 tests failed
+                    - 6 use web.xml
+                 ################################################## -->
+            <!-- run passing test -->
+            <exclude>org/jboss/resteasy/test/core/basic/ByeTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/core/basic/ApplicationPropertiesConfigTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/core/basic/PrivateConstructorTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/core/basic/CacheControlAnnotationTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/core/basic/NullHeaderTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/core/basic/AcceptLanguagesTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/core/basic/ApplicationConfigTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/core/basic/ApplicationPropertiesConfigPropertyApplicationInjectionTest.java</exclude>
+            <!--
+              Passes with code change
+            --><exclude>org/jboss/resteasy/test/core/basic/InternalDispatcherTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/basic/AnnotationInheritanceGenericsTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/basic/PartialAnnotationResourceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/basic/AnnotationInheritanceTest.java</exclude>
+
+            <!-- fails todo (passes but messages) --><exclude>org/jboss/resteasy/test/core/basic/InvalidMediaTypeTest.java</exclude>
+            <!-- fails  web.xml --><exclude>org/jboss/resteasy/test/core/basic/ApplicationFilterTest.java</exclude>
+
+            <!-- fails  web.xml --> <exclude>org/jboss/resteasy/test/core/basic/NoApplicationSubclassTest.java</exclude>
+            <!-- fails  web.xml --><exclude>org/jboss/resteasy/test/core/basic/FileExtensionMappingTest.java</exclude>
+            <!-- fails  web.xml --><exclude>org/jboss/resteasy/test/core/basic/AppConfigTest.java</exclude>
+            <!-- fails web.xml --><exclude>org/jboss/resteasy/test/core/basic/ApplicationTest.java</exclude>
+            <!--
+              Quarkus does not write to log files.
+              The proper number of error msgs are written to the terminal.
+              The test can not count them.  This test does run successfully
+            --> <exclude>org/jboss/resteasy/test/core/basic/DuplicateDeploymentTest.java</exclude>
+            <!-- fails  web.xml --><exclude>org/jboss/resteasy/test/core/basic/ContextTest.java</exclude>
+            <!-- fails
+              Some strange interaction between quarkus-arquillian and interface proxy class
+              being built.
+            --> <exclude>org/jboss/resteasy/test/core/basic/ProviderInjectionTest.java</exclude>
+
+
+
+            <!-- ############## summary asynch ####################
+                dir: org/jboss/resteasy/test/asynch
+                  14 total test
+                  3 tests ran successfully
+                  11 tests failed
+                    - 4 fails .. does not handle path http://localhost:8081/
+                 ################################################## -->
+            <exclude>org/jboss/resteasy/test/asynch/XX**</exclude>
+            <exclude>org/jboss/resteasy/test/asynch/ComprehensiveJaxrsTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/asynch/JaxrsAsyncServletTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/asynch/AsyncGenericEntityTest.java</exclude>
+
+            <!-- FAILS todo (https://github.com/quarkusio/quarkus/issues/7087 quarkus-arquillian
+                  having issue process app using CompletionStage)  --><exclude>org/jboss/resteasy/test/asynch/AsyncInjectionTest.java</exclude>
+
+            <!-- FAILS todo (filed bug
+              https://github.com/quarkusio/quarkus/issues/7084 quarkus-arquillian does
+              call @Before unless @RunAsClient is present)
+                --><exclude>org/jboss/resteasy/test/asynch/AsyncPostProcessingTest.java</exclude>
+            <!-- FAILS todo (does not handle path http://localhost:8081/)  --><exclude>org/jboss/resteasy/test/asynch/AsyncRequestFilterTest.java</exclude>
+            <!-- FAILS todo (does not handle path http://localhost:8081/)  --><exclude>org/jboss/resteasy/test/asynch/JaxrsAsyncTest.java</exclude>
+            <!-- FAILS todo (context param resteasy.async.job.service.enabled not passed to test code)
+                    Complex deployment situation not handled by quarkus
+                    No tests are run
+                      org.jboss.arquillian.container.spi.client.container.DeploymentException:
+                      Unable to start the runtime runner
+                      cause:  java.lang.NullPointerException: Bean is null
+                    stacktrace
+                      io.quarkus.arquillian.QuarkusDeployableContainer.deploy(QuarkusDeployableContainer.java:202)
+                      org.jboss.arquillian.container.impl.client.container.ContainerDeployController$3.call(ContainerDeployController.java:151)
+                      org.jboss.arquillian.container.impl.client.container.ContainerDeployController$3.call(ContainerDeployController.java:118)
+                      org.jboss.arquillian.container.impl.client.container.ContainerDeployController.executeOperation(ContainerDeployController.java:239)
+                      org.jboss.arquillian.container.impl.client.container.ContainerDeployController.deploy(ContainerDeployController.java:118)
+                      java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+                      java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+                      java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+                      java.base/java.lang.reflect.Method.invoke(Method.java:566)
+                      org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:86)
+            --><exclude>org/jboss/resteasy/test/asynch/AsynchBasicTest.java</exclude>
+
+            <!-- Success todo (test passes but displays msg on cmd line
+              .. javax.ws.rs.ServiceUnavailableException: HTTP 503 Service Unavailable)   --><exclude>org/jboss/resteasy/test/asynch/AsyncServletTest.java</exclude>
+            <!-- FAILS todo (ContextParameters.RESTEASY_PREFER_JACKSON_OVER_JSONB is not passed as parameter
+              and ResteasyJackson2Provider is not called but JsonBindingProvider is.
+              The returned data is listed in reverse order) --><exclude>org/jboss/resteasy/test/asynch/AsynchContextualDataTest.java</exclude>
+            <!-- FAILS todo (runs but .. sending back 500: org.jboss.resteasy.spi.UnhandledException)  --><exclude>org/jboss/resteasy/test/asynch/AsyncUnhandledExceptionTest.java</exclude>
+            <!-- FAILS todo (does not handle path http://localhost:8081/) --><exclude>org/jboss/resteasy/test/asynch/SuspendAnnotationTest.java</exclude>
+            <!-- FAILS todo  (does not handle path http://localhost:8081/?asynch=true
+                No resteasy SynchronousDispatcher never called)--><exclude>org/jboss/resteasy/test/asynch/AsynchCounterTest.java</exclude>
+
+            <!--   -->
+            <!-- FAILS (java.io.IOException: throw exception)  --><exclude>org/jboss/resteasy/test/asynch/CallbackTest.java</exclude>
+
+
+
+            <!-- ############## summary xxe ####################
+                  dir: org/jboss/resteasy/test/client
+                     6 total test
+                     1 tests ran successfully
+                     5 tests failed
+                ################################################## -->
+            <exclude>org/jboss/resteasy/test/xxe/YY**</exclude>
+            <exclude>org/jboss/resteasy/test/xxe/NamespaceJaxbTest.java</exclude>
+            <!-- fails todo (ContextParameters not passed) --><exclude>org/jboss/resteasy/test/xxe/XXEBasicTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/xxe/ExternalParameterEntityTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/xxe/SecureProcessing2Test.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/xxe/XxeJaxbTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/xxe/SecureProcessingTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/xxe/XxeSecureProcessingTest.java</exclude>
+
+            <!-- ############## summary interceptor ####################
+                  dir: org/jboss/resteasy/test/interceptor
+                     15 total test
+                     7 tests ran successfully
+                     8 tests failed
+                ################################################## -->
+            <exclude>org/jboss/resteasy/test/interceptor/XX**</exclude>
+            <exclude>org/jboss/resteasy/test/interceptor/ClientFilterResponseBuilderTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/interceptor/ApplicationConfigWithInterceptorTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/interceptor/ResponseFilterCustomExceptionTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/interceptor/ReaderInterceptorContextTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/interceptor/ClientRequestFilterRegistrationTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/interceptor/PreMatchingClientRequestFilterTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/interceptor/InterceptorStreamTest.java</exclude>
+            <!-- fails todo (the manifest defs are not handled.
+                The serverSide does not load the inputStream GZIPDecodingInterceptor.
+                The serverSide reader does not read properly the transmitted text)  --><exclude>org/jboss/resteasy/test/interceptor/GZIPAnnotationTest.java</exclude>
+
+            <!-- fails todo ( https://github.com/quarkusio/quarkus/issues/7084 quarkus-arquillian does
+                  call @Before unless @RunAsClient is present)   --><exclude>org/jboss/resteasy/test/interceptor/PriorityExecutionTest.java</exclude>
+            <!-- fails todo (test does not deploy. Not handling @InSequence ??)  --><exclude>org/jboss/resteasy/test/interceptor/DynamicFeatureTest.java</exclude>
+            <!-- fails todo ( https://github.com/quarkusio/quarkus/issues/7084 quarkus-arquillian does
+                  call @Before unless @RunAsClient is present) --><exclude>org/jboss/resteasy/test/interceptor/StreamCloseTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/interceptor/gzip/NotAllowGzipOnServerNotAllowGzipOnClientTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/interceptor/gzip/NotAllowGzipOnServerAllowGzipOnClientTest.java</exclude>
+
+            <!-- fails todo (test is odd) --><exclude>org/jboss/resteasy/test/interceptor/gzip/AllowGzipOnServerNotAllowGzipOnClientTest.java</exclude>
+            <!-- fails todo (test is odd) --><exclude>org/jboss/resteasy/test/interceptor/gzip/AllowGzipOnServerAllowGzipOnClientTest.java</exclude>
+            <!-- required for compile --><exclude>org/jboss/resteasy/test/client/ClientTestBase.java</exclude>
+
+            <!-- ############## summary response ####################
+                  dir: org/jboss/resteasy/test/response
+                      25 total test
+                      20 tests ran successfully
+                      5 tests failed
+                ################################################## -->
+            <exclude>org/jboss/resteasy/test/response/XX**</exclude>
+            <exclude>org/jboss/resteasy/test/response/CommitNewCookiesHeaderTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/PublisherResponseTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/HttponlyCookieTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/InheritedContextTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/PublisherResponseNoStreamTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/OptionsTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/AnotherPublisherResponseNoStreamTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/ResponseStreamPrematurelyClosedTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/ContentLanguageHeaderTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/RangeTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/MethodDefaultTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/CompletionStageResponseTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/CookieTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/PublisherResponseRawStreamTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/VariantAcceptTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/AnotherPublisherResponseTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/WriterMatchingTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/ResponseHeaderTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/HttpRequestParameterInjectorTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/response/ProduceConsumeTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/response/ResponseTrimmingTest.java</exclude>
+
+            <!-- fails todo
+            <exclude>org/jboss/resteasy/test/response/HeadContentLengthTest.java</exclude>
+            -->
+            
+            <!-- fail todo (no errors no tests run) --><exclude>org/jboss/resteasy/test/response/VariantsTest.java</exclude>
+
+            <!-- fail todo (no error. test does not run.  May not be handling @Rule)  --><exclude>org/jboss/resteasy/test/response/ResponseTest.java</exclude>
+            <!-- fail todo (no error. test does not run. May not handle @Category) --><exclude>org/jboss/resteasy/test/response/DuplicitePathTest.java</exclude>
+
+
+            <!-- ############## summary jsapi, wadl, util, tracing  ####################
+                dir: org/jboss/resteasy/test/jsapi
+                     org/jboss/resteasy/test/wadl
+                     org/jboss/resteasy/test/util
+                     org/jboss/resteasy/test/tracing
+                    6 total test
+                    2 tests ran successfully
+                    4 tests failed
+              ################################################## -->
+            <!-- fails todo web.xml --><exclude>org/jboss/resteasy/test/jsapi/JSAPIGetBasicJsapiHandlingScriptTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/wadl/DeploymentTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/util/DynamicFeatureContextDelegateTest.java</exclude>
+
+            <!-- fails todo (not standard arquillian) --><exclude>org/jboss/resteasy/test/tracing/OnDemandTracingTest.java</exclude>
+            <!-- fails todo (not standard arquillian) --><exclude>org/jboss/resteasy/test/tracing/JsonFormattedTracingInfoTest.java</exclude>
+            <!-- fails todo (not standard arquillian) --><exclude>org/jboss/resteasy/test/tracing/BasicTracingTest.java</exclude>
+
+
+            <!-- ############## summary stream, sourceProvider, exception  ####################
+                dir: org/jboss/resteasy/test/stream
+                     org/jboss/resteasy/test/sourceProvider
+                     org/jboss/resteasy/test/exception
+                     13 total test
+                     12 tests ran successfully
+                     1 tests failed
+              ################################################## -->
+            <exclude>org/jboss/resteasy/test/stream/StreamRawFlowableRxJava2Test.java</exclude>
+            <exclude>org/jboss/resteasy/test/stream/StreamRawObservableRxJava2Test.java</exclude>
+            <!-- fails todo
+                  org.jboss.arquillian.core.impl.ObserverImpl 89
+                  org.jboss.arquillian.container.spi.client.container.DeploymentException: Unable to start the runtime runner
+                  java.lang.RuntimeException: io.quarkus.builder.BuildException:
+                  Build failure: Build failed due to errors
+                     [error]: Build step io.quarkus.resteasy.server.common.deployment.ResteasyServerCommonProcessor
+                            #build threw an exception: java.lang.RuntimeException:
+                            Multiple classes ( org.jboss.resteasy.utils.TestApplication,
+                            org.jboss.resteasy.test.sourceProvider.resource.SourceProviderApp) have been annotated with
+                            @ApplicationPath which is currently not supported
+                     at io.quarkus.resteasy.server.common.deployment.ResteasyServerCommonProcessor.createMultipleApplicationsException(ResteasyServerCommonProcessor.java:752)
+                     at io.quarkus.resteasy.server.common.deployment.ResteasyServerCommonProcessor.build(ResteasyServerCommonProcessor.java:178)
+            --><exclude>org/jboss/resteasy/test/sourceProvider/SourceProviderTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/exception/ExceptionMapperApplicationRuntimeExceptionTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/exception/ExceptionMapperTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/exception/ExceptionHandlingTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/exception/ExceptionMapperWebRuntimeExceptionTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/exception/AbstractExceptionMapperTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/exception/WebApplicationExceptionTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/exception/ResponseExceptionMapperRuntimeExceptionTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/exception/ClosedResponseHandlingTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/exception/ExceptionMapperCustomRuntimeExceptionTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/exception/ExceptionMapperInjectionTest.java</exclude>
+
+
+
+            <!-- ############## core/smoke, client  ####################
+                dir: org/jboss/resteasy/test/core/smoke
+                     org/jboss/resteasy/test/client
+                      65 total test
+                      48 tests ran successfully
+                      17 tests failed
+              ################################################## -->
+            <exclude>org/jboss/resteasy/test/core/smoke/ResourceWithInterfaceTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/core/smoke/ResourceWithMultipleInterfacesTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/core/smoke/WireSmokeTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/ClientDynamicFeaturesTest.java</exclude>
+            <!-- fails todo (expected:<1> but was:<0>)
+            --><exclude>org/jboss/resteasy/test/client/ClientBuilderTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/NullEntityTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/AbortMessageTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/JAXRS21PatchTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/ClientFormParamTest.java</exclude>
+            <!-- fails todo
+                java.io.IOException: java.net.ConnectException:
+                WFLYPRT0053: Could not connect to
+                remote+http://localhost:9990. The connection failed
+            --><exclude>org/jboss/resteasy/test/client/EntityBufferingInFileTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/client/InputStreamTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/PrimitiveTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/SmokeParamTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/ClientCacheInterceptorTest.java</exclude>
+            <!-- fails todo (org.junit.ComparisonFailure:
+                  expected:<[default]> but was:<[<!DOCTYPE html>
+                  org.jboss.resteasy.test.client.ClientInvocationBuilderTest.testBuildMethodResetEntity(ClientInvocationBuilderTest.java:111))
+            --><exclude>org/jboss/resteasy/test/client/ClientInvocationBuilderTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/RedirectTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/ClientExecutorShutdownTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/client/ParameterListTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/IndirectInvocationTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/LinkHeaderTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/SyncInvokeTest.java</exclude>
+            <!-- fails todo (expected:<303> but was:<404>)
+          --><exclude>org/jboss/resteasy/test/client/ClientResponseRedirectTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/TimeoutTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/client/AsyncTimeoutExceptionsTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/AsyncInvokeTest.java</exclude>
+            <!-- fails todo
+                  java.util.ServiceConfigurationError:
+                    org.apache.logging.log4j.spi.Provider:
+                    org.apache.logging.log4j.core.impl.Log4jProvider
+                  not a subtype
+          --><exclude>org/jboss/resteasy/test/client/InContainerClientBenchTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/client/ChunkedTransferEncodingTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/InputStreamResourceTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/ClientCacheTest.java</exclude>
+            <!-- fails todo
+                java.util.ServiceConfigurationError:
+                    org.apache.logging.log4j.spi.Provider:
+                    org.apache.logging.log4j.core.impl.Log4jProvider
+                  not a subtype
+            --><exclude>org/jboss/resteasy/test/client/TraceTest.java</exclude>
+
+            <!-- fails todo (java.io.IOException:
+                java.net.ConnectException: WFLYPRT0053: Could not connect to
+                remote+http://localhost:9990. The connection failed) --><exclude>org/jboss/resteasy/test/client/RxInvokerTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/ClientProviderTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/ClientResponseWithEntityTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/GenericReturnTypeTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/ClientCookieTest.java</exclude>
+            <!-- OK (tagged not a functioning test)--> <exclude>org/jboss/resteasy/test/client/AsyncBenchTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/WebTargetTest.java</exclude>
+
+
+            <exclude>org/jboss/resteasy/test/client/proxy/ContentLanguageProxyTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/GenericProxyTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/ClientResponseFailureTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/ProxyJaxbResourceIntfTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/ProxyInputStreamTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/ProxyCastingTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/DefaultMediaTypesTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/proxy/MediaTypeCaseSensitivityTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/client/proxy/ResponseObjectTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/proxy/ProxyWithGenericReturnTypeTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/ProxyNullInputStreamTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/UnauthorizedHttpCodeTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/ProxyJaxbResourcePostTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/ProxyClassloaderTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/WhitespaceTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/ClientSmokeTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/ContextTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/proxy/SubResourceLocatorProxyTest.java</exclude>
+            <!-- fails todo  --><exclude>org/jboss/resteasy/test/client/proxy/EncodedPathProxyTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/proxy/NullEntityProxyTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/proxy/ProxyCastingSimpleTest.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/exception/UnauthorizedExceptionTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/exception/ClientExceptionsTest.java</exclude>
+            <!-- fails todo --> <exclude>org/jboss/resteasy/test/client/exception/ClientErrorTest.java</exclude>
+            <exclude>org/jboss/resteasy/test/client/exception/ClientErrorBadMediaTypeTest.java</exclude>
+            <!-- fails todo
+                java.util.ServiceConfigurationError:
+                    org.apache.logging.log4j.spi.Provider:
+                    org.apache.logging.log4j.core.impl.Log4jProvider
+                  not a subtype
+           --><exclude>org/jboss/resteasy/test/client/exception/ExceptionBufferingTest.java</exclude>
+
+            <!-- fails todo ( expected:<30> but was:<0>)
+           --><exclude>org/jboss/resteasy/test/client/other/ApacheHttpClient43Test.java</exclude>
+
+            <exclude>org/jboss/resteasy/test/client/other/CustomHttpClientEngineTest.java</exclude>
+
+
+
+            <!-- ############## crypto, providers, validation  ####################
+                dir: org/jboss/resteasy/test/crypto
+                     org/jboss/resteasy/test/providers
+                     org/jboss/resteasy/test/validation
+                       132 total test
+                       75 tests ran successfully
+                       57 tests failed
+              ################################################## -->
+            <!-- fails todo (contextParams not passed)
+             --><exclude>org/jboss/resteasy/test/crypto/SigningTest.java</exclude>
+            <!-- fails todo (needs investigation)
+            --><exclude>org/jboss/resteasy/test/crypto/VerifyDecryptTest.java</exclude>
+            <!-- fails todo (java.lang.RuntimeException: Unexpected BouncyCastle error)
+            --> <exclude>org/jboss/resteasy/test/crypto/CryptoTest.java</exclude>
+            <!-- fails todo (javax.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error)
+            --> <exclude>org/jboss/resteasy/test/crypto/PKCS7SignatureSmokeTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/providers/html/HtmlSanitizerOptionalTest.java</exclude>
+
+            <!-- fail todo
+                known issue: https://github.com/quarkusio/quarkus-images/issues/13
+                java.lang.NoSuchMethodError: org.eclipse.aether.transfer.TransferResource.
+                <init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/io/File;
+                Lorg/eclipse/aether/RequestTrace;)V
+            --><exclude>org/jboss/resteasy/test/providers/html/HeadersInViewResponseTest.java</exclude>
+
+            <!-- fail todo (java.lang.AssertionError: expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/providers/plain/CharsetTest.java</exclude>
+            <!-- fails todo (test does not use @RunAsClient)
+                https://github.com/quarkusio/quarkus/issues/7084 quarkus-arquillian does
+                  call @Before unless @RunAsClient is present
+            --><exclude>org/jboss/resteasy/test/providers/plain/DefaultNumberWriterTest.java</exclude>
+             <!-- fails todo (using BouncyCastleProvider)
+             --><exclude>org/jboss/resteasy/test/providers/mediatype/BlacklistedMediaTypeTest.java</exclude>
+            <!-- fails todo (java.lang.AssertionError: expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/providers/atom/AtomProviderTest.java</exclude>
+            <!-- fails todo (java.lang.AssertionError: expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/providers/atom/JAXBContextFinderTest.java</exclude>
+            <!-- fails todo (junit.framework.AssertionFailedError: expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/providers/atom/AtomComplexModelTest.java</exclude>
+            <!-- fails todo (fails because return address does not contain the web-app name.
+                  The return address is valid for quarkus ... needed to change assert??)
+            --><exclude>org/jboss/resteasy/test/providers/atom/LinkTest.java</exclude>
+            <!-- fails todo (javax.ws.rs.BadRequestException: HTTP 400 Bad Request)
+            --><exclude>org/jboss/resteasy/test/providers/jsonp/JsonpTest.java</exclude>
+            <!-- fails todo
+                javax.enterprise.inject.spi.DeploymentException: Found 2 deployment problems:
+                [1] Unsatisfied dependency for type
+                    org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityExceptionMapperCCC and qualifiers [@Default]
+                   - java member: org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource#exceptionMapper
+                   - declared on CLASS bean [types=[org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource, java.lang.Object],
+                  qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource]
+                [2] Unsatisfied dependency for type org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityFooParamConverterProviderCCC
+                    and qualifiers [@Default]
+                   - java member: org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource#paramConvertrProvider
+                   - declared on CLASS bean [types=[org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource, java.lang.Object],
+                    qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource]
+          --><exclude>org/jboss/resteasy/test/providers/priority/ProviderPriorityProvidersRegisteredProgramaticallyTest.java</exclude>
+            <!-- fails todo
+                  Build failure: Build failed due to errors
+                     [error]: Build step io.quarkus.arc.deployment.ArcProcessor#validate threw an exception: javax.enterprise.inject.spi.DeploymentException: Found 2 deployment problems:
+                  [1] Unsatisfied dependency for type org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityExceptionMapperCCC and qualifiers [@Default]
+                     - java member: org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource#exceptionMapper
+                     - declared on CLASS bean [types=[org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource, java.lang.Object],
+                              qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource]
+                  [2] Unsatisfied dependency for type org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityFooParamConverterProviderCCC
+                                and qualifiers [@Default]
+                     - java member: org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource#paramConvertrProvider
+                     - declared on CLASS bean [types=[org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource, java.lang.Object], qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource]
+                     at io.quarkus.arc.processor.BeanDeployment.processErrors(BeanDeployment.java:918)
+                     at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:232)
+                     at io.quarkus.arc.processor.BeanProcessor.initialize(BeanProcessor.java:130)
+                     at io.quarkus.arc.deployment.ArcProcessor.validate(ArcProcessor.java:290)
+                     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+                     at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+                     at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+                     at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+                     at io.quarkus.deployment.ExtensionLoader$2.execute(ExtensionLoader.java:929)
+                     at io.quarkus.builder.BuildContext.run(BuildContext.java:279)
+                     at org.jboss.threads.ContextClassLoaderSavingRunnable.run(ContextClassLoaderSavingRunnable.java:35)
+                     at org.jboss.threads.EnhancedQueueExecutor.safeRun(EnhancedQueueExecutor.java:2027)
+                     at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.doRunTask(EnhancedQueueExecutor.java:1551)
+                     at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1442)
+                     at java.base/java.lang.Thread.run(Thread.java:834)
+                     at org.jboss.threads.JBossThread.run(JBossThread.java:479)
+                     Suppressed: javax.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityExceptionMapperCCC and qualifiers [@Default]
+                     - java member: org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource#exceptionMapper
+                     - declared on CLASS bean [types=[org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource, java.lang.Object], qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource]
+                        at io.quarkus.arc.processor.Beans.resolveInjectionPoint(Beans.java:472)
+                        at io.quarkus.arc.processor.BeanInfo.init(BeanInfo.java:420)
+                        at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:224)
+                        ... 14 more
+                     Suppressed: javax.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityFooParamConverterProviderCCC and qualifiers [@Default]
+                     - java member: org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource#paramConvertrProvider
+                     - declared on CLASS bean [types=[org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource, java.lang.Object], qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.providers.priority.resource.ProviderPriorityResource]
+                        at io.quarkus.arc.processor.Beans.resolveInjectionPoint(Beans.java:472)
+                        at io.quarkus.arc.processor.BeanInfo.init(BeanInfo.java:420)
+                        at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:224)
+                        ... 14 more
+           --><exclude>org/jboss/resteasy/test/providers/priority/ProviderPriorityProvidersInApplicationTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/providers/jsonb/basic/JsonBindingAnnotationsJacksonTest.java</exclude>
+
+            <!-- fails todo (arquillian annotation related issue)
+                org.jboss.arquillian.container.test.impl.client.deployment.ValidationException:
+                DeploymentScenario contains a target (jbossas-managed-encoding) not matching
+                any defined Container in the registry.
+                Possible causes are: None of the 1 Containers are marked as default or you
+                have defined a @Deployment with a @TargetsContainer of value
+                (jbossas-managed-encoding) that does not match any found/configured
+                Containers (default), see arquillian.xml container@qualifier
+            --><exclude>org/jboss/resteasy/test/providers/jsonb/basic/JsonBindingTest.java</exclude>
+           <!-- --><exclude>org/jboss/resteasy/test/providers/jsonb/basic/SetMethodWithMoreArgumentsTest.java</exclude>
+            <!-- fails todo (Does not use @RunAsClient)
+            --><exclude>org/jboss/resteasy/test/providers/jsonb/basic/JsonBindingDebugLoggingTest.java</exclude>
+           <!-- --><exclude>org/jboss/resteasy/test/providers/iioimage/IIOImageProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/inputstream/InputStreamCloseTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/file/TempFileDeletionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/multipart/NullPartTest.java</exclude>
+            <!-- fails todo (javax.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error)
+            --><exclude>org/jboss/resteasy/test/providers/multipart/MimeMultipartProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/multipart/XOPMultipartProxyTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/multipart/EmptyInputStreamMultipartProviderTest.java</exclude>
+            <!-- fails todo (javax.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error)
+            --><exclude>org/jboss/resteasy/test/providers/multipart/EmbeddedMultipartTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/multipart/InputPartDefaultContentTypeEncodingOverwriteTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/multipart/EncodingMimeMultipartFormProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/multipart/HeaderFlushedOutputStreamTest.java</exclude>
+            <!-- fails todo (execution error)
+             --><exclude>org/jboss/resteasy/test/providers/multipart/InputPartDefaultContentTypeWildcardOverwriteNewInterceptorTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/providers/multipart/InputPartDefaultCharsetOverwriteTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/providers/multipart/ContextProvidersTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/multipart/GenericTypeMultipartTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/multipart/ProxyTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/sse/SseSmokeTest.java</exclude>
+            <!-- fails todo (some type of deployment issue)
+            --><exclude>org/jboss/resteasy/test/providers/multipart/ProxyTest.java</exclude>
+            <!-- fails todo (java.lang.AssertionError: response OK is expected expected:<200> but was:<404>)
+            --><exclude>org/jboss/resteasy/test/providers/sse/SseCORSFilterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/sse/SseEventSinkClosingTest.java</exclude>
+            <!-- fails todo (io.quarkus.builder.BuildException: Build failure: Build failed due to errors
+                [error]: Build step io.quarkus.resteasy.server.common.deployment.ResteasyServerCommonProcessor#build threw an exception:
+                java.lang.RuntimeException: Multiple classes (
+                org.jboss.resteasy.utils.TestApplication,
+                org.jboss.resteasy.test.providers.sse.SsePostResourceMethodInvokerApplication)
+                have been annotated with @ApplicationPath which is currently not supported)
+            --><exclude>org/jboss/resteasy/test/providers/sse/SsePostResourceMethodInvokerTest.java</exclude>
+            <!-- fails todo (expected:<0> but was:<1>)
+            --><exclude>org/jboss/resteasy/test/providers/sse/SseEventSinkTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/sse/SseBroadcasterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/sse/SseReconnectTest.java</exclude>
+            <!-- fails todo (java.lang.AssertionError: Exception is expected)
+             --><exclude>org/jboss/resteasy/test/providers/sse/SseJsonEventTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/sse/SseEnablingTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/sse/SseEventSourceTest.java</exclude>
+            <!-- fails todo (test failures)
+            --><exclude>org/jboss/resteasy/test/providers/sse/SseTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/sse/SseBroadcastTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/mbw/MessageBodyWriterObjectDefaultTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/datasource/CleanFilesDataSourceProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/datasource/ReadDataSourceTest.java</exclude>
+            <!-- fails todo (Wrong length of response expected:<5120> but was:<3994>)
+            --><exclude>org/jboss/resteasy/test/providers/datasource/DataSourceProviderInputStreamTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/datasource/ReadDataSourceTwiceCountTempFileTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/datasource/ReadFromSocketDataSourceProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/datasource/BigSmallDataSourceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/map/MapProviderBuiltInTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/map/MapProviderTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/providers/jaxb/KeepCharsetTest.java</exclude>
+
+            <!-- fails todo (deployment error)
+            --><exclude>org/jboss/resteasy/test/providers/jaxb/XmlHeaderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/CollectionCoreTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/AbstractJaxbClassTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/EmptyContentTypeTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/SeeAlsoAnnotationTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/JaxbCollectionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/JaxbElementTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/ParsingTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/BadContentTypeTest.java</exclude>
+            <!-- fails todo (does not use @RunAsClient)
+            --><exclude>org/jboss/resteasy/test/providers/jaxb/XmlJavaTypeAdapterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/CharSetRE1066Test.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/CustomOverrideTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/XmlEnumParamTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/XmlJAXBContextFinderTest.java</exclude>
+            <!-- fails todo (expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/providers/jaxb/XmlJaxbProvidersTest.java</exclude>
+            <!-- fails todo (does not use @RunAsClient)
+            --><exclude>org/jboss/resteasy/test/providers/jaxb/JaxbMarshallingSoakTest.java</exclude>
+            <!-- fails todo (HTTP 500 Internal Server Error)
+            --><exclude>org/jboss/resteasy/test/providers/jaxb/JaxbXmlRootElementProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/MapTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/StatsTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/GenericSuperInterfaceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/CharacterSetTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/ExceptionMapperJaxbTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/GenericResourceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/JaxbCacheTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/StreamResetTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/LinkJaxbTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/QualityFactorTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/StringCharsetTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/CharSetTest.java</exclude>
+            <!-- fails todo (Build failure: Build failed due to errors
+               [error]: Build step io.quarkus.resteasy.server.common.deployment.ResteasyServerCommonProcessor#build
+                    threw an exception: java.lang.RuntimeException: Multiple classes (
+                    org.jboss.resteasy.utils.TestApplication,
+                    org.jboss.resteasy.test.providers.jaxb.resource.HomecontrolApplication)
+                    have been annotated with @ApplicationPath which is currently not supported)
+            --><exclude>org/jboss/resteasy/test/providers/jaxb/HomecontrolCustomJAXBContextTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jaxb/InheritanceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/noproduces/ProviderWithNoProducesTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/CollectionProviderTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/providers/custom/ReaderWriterTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/RetrieveRegisteredClassesTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/ResponseFilterChangeStatusTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/ProviderContextInjectionTest.java</exclude>
+            <!-- fails todo (test failures)
+            --><exclude>org/jboss/resteasy/test/providers/custom/DuplicateProviderRegistrationTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/ResponseFilterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/SingletonCustomProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/CustomConstrainedFeatureTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/ResponseGetAnnotationsTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/CustomProviderPreferenceTest.java</exclude>
+            <!-- fails todo (test expected app name to be in return value)
+            --><exclude>org/jboss/resteasy/test/providers/custom/SetRequestUriTest.java</exclude>
+            <!-- fails todo (Wrong MessageBodyWriter was used)
+            --><exclude>org/jboss/resteasy/test/providers/custom/WriterNotBuiltinTest.java</exclude>
+            <!-- fails todo (test fails)
+            --><exclude>org/jboss/resteasy/test/providers/custom/CustomValueInjectorTest.java</exclude>
+            <!-- fails todo (Warning was not logged expected:<1> but was:<0>)
+            --><exclude>org/jboss/resteasy/test/providers/custom/MissingProducerTest.java</exclude>
+            <!-- fails todo (java.io.FileNotFoundException: http://localhost:8081//test)
+            --><exclude>org/jboss/resteasy/test/providers/custom/FilterDispatcherUndertowTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/CustomContextProviderPreferenceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/custom/ResponseContainerFilterTest.java</exclude>
+            <!-- fails todo (java.lang.NullPointerException)
+            --><exclude>org/jboss/resteasy/test/validation/ValidateOnExecutionTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/validation/ValidationComplexTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/validation/ValidationExceptionsTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/validation/ValidationCoreTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/ValidationXMLTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/validation/PathSuppressionTest.java</exclude>
+
+            <!----><exclude>org/jboss/resteasy/test/validation/ContextProvidersNewClientTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/validation/ValidationJaxbTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/validation/ResteasyViolationExceptionRepresentationTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/validation/ValidationNullErrorValueTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/validation/GetterReturnValueNotValidatedTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/ValidationSurpressPathDefaultTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/ValidationOnGetterTest.java</exclude>
+            <!-- fails todo (wrong return value)
+            --><exclude>org/jboss/resteasy/test/validation/ValidationHibernateI18NTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/ValidationTest.java</exclude>
+            <!-- fails todo (java.lang.LinkageError: loader constraint violation:
+                  when resolving interface method
+                "javax.xml.stream.events.StartElement.getAttributeByName(Ljavax/xml/namespace/QName;)Ljavax/xml/stream/events/Attribute;"
+                the class loader io.quarkus.bootstrap.classloading.QuarkusClassLoader @78cfa264
+                (instance of io.quarkus.bootstrap.classloading.QuarkusClassLoader, child of
+                'bootstrap') of the current class, org/hibernate/validator/internal/xml/XmlParserHelper,
+                and the class loader 'bootstrap' for the method's defining class,
+                javax/xml/stream/events/StartElement, have different Class objects for the
+                type javax/xml/namespace/QName used in the signature)
+            --><exclude>org/jboss/resteasy/test/validation/ExecutableValidationDisabledTest.java</exclude>
+            <!-- fails todo (test fails)
+            --><exclude>org/jboss/resteasy/test/validation/ValidationSurpressPathTrueTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/ValidationThroughRestTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/ValidationSurpressPathFalseTest.java</exclude>
+            <!-- fails todo (java.lang.LinkageError: loader constraint violation:
+                  when resolving interface method
+                "javax.xml.stream.events.StartElement.getAttributeByName(Ljavax/xml/namespace/QName;)Ljavax/xml/stream/events/Attribute;"
+                the class loader io.quarkus.bootstrap.classloading.QuarkusClassLoader @78cfa264
+                (instance of io.quarkus.bootstrap.classloading.QuarkusClassLoader, child of
+                'bootstrap') of the current class, org/hibernate/validator/internal/xml/XmlParserHelper,
+                and the class loader 'bootstrap' for the method's defining class,
+                javax/xml/stream/events/StartElement, have different Class objects for the
+                type javax/xml/namespace/QName used in the signature)
+            --><exclude>org/jboss/resteasy/test/validation/GetterReturnValueValidatedTest.java</exclude>
+            <!-- fails todo (test fails)
+            --><exclude>org/jboss/resteasy/test/validation/cdi/SubresourceValidationTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/cdi/ValidationSessionBeanTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/cdi/CDIValidationSessionBeanTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/cdi/CDIValidationCoreTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/validation/cdi/MultipleWarTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/validation/cdi/ApplicationScopeValidationTest.java</exclude>
+
+
+            <!-- ############## resource  ####################
+              dir: org/jboss/resteasy/test/resource
+                     85 total test
+                     62 tests ran successfully
+                     23 tests failed
+            ################################################## -->
+            <!----><exclude>org/jboss/resteasy/test/resource/basic/ResourceLocatorTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/resource/basic/MediaTypeFromMessageBodyWriterTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/MultiInterfaceResLocatorTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/SpecialResourceTest.java</exclude>
+            <!-- fails todo (expected expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/resource/basic/ResourceInfoInjectionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/CollectionDefaultValueTest.java</exclude>
+            <!-- fails todo (test fails)
+            --><exclude>org/jboss/resteasy/test/resource/basic/WiderMappingTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/WiderMappingNegativeTest.java</exclude>
+            <!-- fails todo (test fails)
+            --><exclude>org/jboss/resteasy/test/resource/basic/ExtensionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/CovariantReturnSubresourceLocatorsTest.java</exclude>
+            <!-- fails todo (test fails)
+             --><exclude>org/jboss/resteasy/test/resource/basic/ResponseCommittedTest.java</exclude>
+            <!-- fails todo (test fails)
+            --><exclude>org/jboss/resteasy/test/resource/basic/MultipleGetResourceTest.java</exclude>
+            <!-- fails todo (javax.enterprise.inject.spi.DeploymentException: Found 2 deployment problems:
+                  [1] Unsatisfied dependency for type javax.ws.rs.core.UriInfo and qualifiers [@Default]
+                     - java member: org.jboss.resteasy.test.resource.basic.resource
+                          .ConstructedInjectionResource#<init>()
+                     - declared on CLASS bean [types=[org.jboss.resteasy.test.resource.basic
+                          .resource.ConstructedInjectionResource, java.lang.Object],
+                            qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.resource
+                          .basic.resource.ConstructedInjectionResource]
+                  [2] Unsatisfied dependency for type java.lang.String and qualifiers [@Default]
+                     - java member: org.jboss.resteasy.test.resource.basic.resource
+                            .ConstructedInjectionResource#<init>()
+                     - declared on CLASS bean [types=[org.jboss.resteasy.test.resource.
+                            basic.resource.ConstructedInjectionResource, java.lang.Object],
+                            qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.resource
+                            .basic.resource.ConstructedInjectionResource])
+            --><exclude>org/jboss/resteasy/test/resource/basic/ConstructedInjectionTest.java</exclude>
+            <!-- fails todo (java.lang.AssertionError: expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/resource/basic/ReponseInfoTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/MultipleAcceptHeaderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/MatchedResourceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/MultipleEndpointsWarningTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/resource/basic/UriInfoTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/ClassLevelMediaTypeTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/GenericResourceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/ScanTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/MediaTypeNegotiationTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/SubResourceLocatorTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/resource/basic/DefaultCharsetTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/GenericEntityTest.java</exclude>
+            <!-- fails todo (known issue expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/resource/basic/DefaultMediaTypeTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/HttpHeadersTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/basic/InheritanceTest.java</exclude>
+            <!-- fails todo (expected:<[application]> but was:<[text]>)
+            --><exclude>org/jboss/resteasy/test/resource/basic/MediaTypeNegotiationClientQualityTest.java</exclude>
+            <!-- fails todo (expected:<[y]> but was:<[html]>)
+            --><exclude>org/jboss/resteasy/test/resource/basic/MediaTypeNegotiationServerQualityTest.java</exclude>
+            <!-- fails todo (expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/resource/basic/ParameterSubResTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/SerializableWithParametersTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/FormParamTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/QueryTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/SpecialCharsInUrlTest.java</exclude>
+            <!-- fails todo (expected:<404> but was:<200>)
+            --><exclude>org/jboss/resteasy/test/resource/param/MatrixParamAsPrimitiveTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/MultiplePathSegmentTest.java</exclude>
+            <!-- fails todo (expected:<404> but was:<200>)
+            --><exclude>org/jboss/resteasy/test/resource/param/QueryParamAsPrimitiveTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/RESTEasyParamCdiTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/StringParamUnmarshallerTest.java</exclude>
+            <!-- fails todo (expected:<400> but was:<200>)
+            --><exclude>org/jboss/resteasy/test/resource/param/HeaderParamsAsPrimitivesTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/ParamConverterTest.java</exclude>
+            <!-- fails todo (no @RunAsClient)
+            --><exclude>org/jboss/resteasy/test/resource/param/HeaderDelegateTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/MultiValuedParamDateProxyTest.java</exclude>
+            <!-- fails todo (Build failure: Build failed due to errors
+               [error]: Build step io.quarkus.arc.deployment.ArcProcessor#validate threw an exception: javax.enterprise.inject.spi.DeploymentException: javax.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type java.lang.String and qualifiers [@Default]
+               - java member: org.jboss.resteasy.test.resource.param.MatrixPathParamTest$TestSubResourceServer#<init>()
+               - declared on CLASS bean [types=[org.jboss.resteasy.test.resource.param.MatrixPathParamTest$TestSubResourceServer, java.lang.Object], qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.resource.param.MatrixPathParamTest$TestSubResourceServer]
+               at io.quarkus.arc.processor.BeanDeployment.processErrors(BeanDeployment.java:910)
+               at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:232)
+               at io.quarkus.arc.processor.BeanProcessor.initialize(BeanProcessor.java:130)
+               at io.quarkus.arc.deployment.ArcProcessor.validate(ArcProcessor.java:290)
+               at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+               at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+               at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+               at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+               at io.quarkus.deployment.ExtensionLoader$2.execute(ExtensionLoader.java:929)
+               at io.quarkus.builder.BuildContext.run(BuildContext.java:279)
+               at org.jboss.threads.ContextClassLoaderSavingRunnable.run(ContextClassLoaderSavingRunnable.java:35)
+               at org.jboss.threads.EnhancedQueueExecutor.safeRun(EnhancedQueueExecutor.java:2027)
+               at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.doRunTask(EnhancedQueueExecutor.java:1551)
+               at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1442)
+               at java.base/java.lang.Thread.run(Thread.java:834)
+               at org.jboss.threads.JBossThread.run(JBossThread.java:479)
+            Caused by: javax.enterprise.inject.UnsatisfiedResolutionException: Unsatisfied dependency for type java.lang.String and qualifiers [@Default]
+               - java member: org.jboss.resteasy.test.resource.param.MatrixPathParamTest$TestSubResourceServer#<init>()
+               - declared on CLASS bean [types=[org.jboss.resteasy.test.resource.param.MatrixPathParamTest$TestSubResourceServer, java.lang.Object], qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.resource.param.MatrixPathParamTest$TestSubResourceServer]
+               at io.quarkus.arc.processor.Beans.resolveInjectionPoint(Beans.java:472)
+               at io.quarkus.arc.processor.BeanInfo.init(BeanInfo.java:420)
+               at io.quarkus.arc.processor.BeanDeployment.init(BeanDeployment.java:224)
+               ... 14 more)
+            --><exclude>org/jboss/resteasy/test/resource/param/MatrixPathParamTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/MultiValuedParamDateNoProxyTest.java</exclude>
+            <!-- --> <exclude>org/jboss/resteasy/test/resource/param/ParamTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/MultiValuedParamDefaultParamConverterProxyTest.java</exclude>
+            <!-- fails todo (javax.enterprise.inject.spi.DeploymentException:
+                  Found 24 deployment problems:
+                  [1] Unsatisfied dependency for type java.lang.String and qualifiers [@Default]
+                     - java member: org.jboss.resteasy.test.resource.param.resource
+                     .RESTEasyParamBasicJaxRsParamDifferentResource#<init>()
+                     - declared on CLASS bean [types=[org.jboss.resteasy.test.resource.param.
+                     resource.RESTEasyParamBasicJaxRsParamDifferentResource, java.lang.Object],
+                     qualifiers=[@Default, @Any], target=org.jboss.resteasy.test.resource.param.
+                     resource.RESTEasyParamBasicJaxRsParamDifferentResource]
+                  )
+            --><exclude>org/jboss/resteasy/test/resource/param/RESTEasyParamBasicTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/HeaderDelegateAsProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/MultiValuedParamCustomClassTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/UriParamAsPrimitiveTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/ComplexPathParamTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/CookieInjectionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/MultiValuedParamCdiTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/SuperStringConverterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/MultiValuedParamDefaultParamConverterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/PrimitiveParamConverterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/param/QueryParamWithMultipleEqualsTest.java</exclude>
+
+            <!-- fails todo (expected:<200> but was:<304>)
+            --><exclude>org/jboss/resteasy/test/resource/request/PreconditionRfc7232Test.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/request/DateFormatPathTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/request/NotFoundErrorMessageTest.java</exclude>
+            <!-- fails todo (expected:<304> but was:<412>)
+            --><exclude>org/jboss/resteasy/test/resource/request/PreconditionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/request/ResteasyRequestTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/WildcardResourceMatchingTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/LocatorTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/ResourceLocatorWithBaseExpressionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/ResteasyTrailingSlashTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/ResourceLocatorRegexCapturingGroupTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/PathParamMissingDefaultValueTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/ResourceLocatorWithBaseNoExpressionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/LocatorSubResourceReturningThisTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/MultipleMatrixSegmentsTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/ResourceMatchingMultipleTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/ResourceMatchingTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/TrailingSlashTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/EncodedPathTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/PathLimitedTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/LocatorWithClassHierarchyTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/resource/path/UriParamsWithLocatorTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/PathParamTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/path/ResourceLocatorRegexNonCapturingGroupTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/constructor/ResourceConstructorParamsTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/patch/PatchErrorHandlingTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/resource/patch/StudentPatchTest.java</exclude>
+
+
+
+            <!-- ############## warning, core/logging, core/spi, core/servlet, core/encoding, core/interceptors  ####################
+              dir: org/jboss/resteasy/test/warning
+                    org/jboss/resteasy/core/logging
+                    org/jboss/resteasy/core/spi
+                    org/jboss/resteasy/core/servlet
+                    org/jboss/resteasy/core/encoding
+                    org/jboss/resteasy/core/interceptors
+                     23 total test
+                     13 tests ran successfully
+                     10 tests failed
+            ################################################## -->
+            <!-- fails todo (<0> was less than <1>)
+            --><exclude>org/jboss/resteasy/test/warning/SubResourceWarningTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/core/logging/DebugLoggingTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/core/ResteasyJAXRSImplTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/spi/ResourceClassProcessorNotAppliedTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/spi/ResourceClassProcessorPriorityTest.java</exclude>
+            <!-- fails todo (<0> was less than <1>)
+            --><exclude>org/jboss/resteasy/test/core/spi/ResourceClassProcessorErrorTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/core/spi/ResourceClassProcessorBasicTest.java</exclude>
+
+            <!-- fails todo (address issue   java.io.FileNotFoundException: http://localhost:8081//test)
+            --><exclude>org/jboss/resteasy/test/core/servlet/UndertowTest.java</exclude>
+            <!-- fails todo (java.lang.RuntimeException: java.lang.RuntimeException: RESTEASY003190:
+              Could not find constructor for class:
+              org.jboss.resteasy.test.core.servlet.resource.ServletMappingProxy)
+            --><exclude>org/jboss/resteasy/test/core/servlet/ServletMappingTest.java</exclude>
+            <!-- fails todo (expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/core/servlet/FilterTest.java</exclude>
+            <!-- fails todo (java.lang.RuntimeException: java.lang.RuntimeException: RESTEASY003925:
+                  Unable to instantiate ExceptionMapper)
+            --><exclude>org/jboss/resteasy/test/core/servlet/ServletConfigTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/encoding/SpecialCharactersTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/encoding/EncodedParamsTest.java</exclude>
+            <!-- fails todo (path issue  http://localhost:8081//test/path-param/start%3Fend)
+            --><exclude>org/jboss/resteasy/test/core/encoding/EncodingTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/encoding/MatrixParamEncodingTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/encoding/ParameterEncodingTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/interceptors/FilteredCookieTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/interceptors/ReaderContextTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/interceptors/PreProcessorExceptionMapperTest.java</exclude>
+            <!-- fails todo (expected:<413> but was:<200>)
+            --><exclude>org/jboss/resteasy/test/core/interceptors/GzipSizeTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/interceptors/ClientResponseFilterExceptionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/interceptors/GzipTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/core/interceptors/CorsFiltersTest.java</exclude>
+
+
+            <!-- ##############  rx, providers/jackson2, security  ####################
+              dir: org/jboss/resteasy/test/rx
+                    org/jboss/resteasy/test/providers/jackson2
+                    org/jboss/resteasy/test/security
+                     51 total test
+                     32 tests ran successfully
+                     19 tests failed
+            ################################################## -->
+            <!-- fails todo ()
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/JacksonJsonViewTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jackson2/Jackson2Test.java</exclude>
+            <!-- fails todo (Multiple filter doesn't work)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/jsonfilter/JsonFilterWithInterceptorMultipleFiltersTest.java</exclude>
+            <!-- fails todo (Filter doesn't work)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/jsonfilter/JsonFilterSuperClassTest.java</exclude>
+            <!-- fails todo (Filter doesn't work)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/jsonfilter/JsonFilterWithServletConditionalFilterTest.java</exclude>
+            <!-- fails todo (Filter doesn't work)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/jsonfilter/JsonFilterWithInterceptorConditionalFilterTest.java</exclude>
+            <!-- fails todo (Filter doesn't work)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/jsonfilter/JsonFilterWithSerlvetFilterTest.java</exclude>
+            <!-- fails todo (Multiple filter doesn't work)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/jsonfilter/JsonFilterWithServletMultipleFiltersTest.java</exclude>
+            <!-- fails todo (Filter doesn't work)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/jsonfilter/JsonFilterWithInterceptrTest.java</exclude>
+            <!-- fails todo (Response does not contain UN_KNOWN_ERR)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/ExceptionMapperMarshalTest.java</exclude>
+            <!-- fails todo (Type property is missing.)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/ProxyWithGenericReturnTypeJacksonTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jackson2/JacksonJaxbCoexistenceTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/JacksonDatatypeTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jackson2/multipart/Jackson2MultipartFormTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/providers/jackson2/PreferJacksonOverJsonBClientTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jackson2/CustomJackson2ProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jackson2/whitelist/WhiteListPolymorphicTypeValidatorTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/providers/jackson2/whitelist/WhiteListPolymorphicTypeValidatorCatchAllTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/security/SslServerWithWildcardHostnameCertificateTest.java</exclude>
+            <!-- fails todo (Connection refused)
+            --><exclude>org/jboss/resteasy/test/security/SslServerWithoutCertificateTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/security/SslSniHostNamesTest.java</exclude>
+            <!-- fails todo (expected:<403> but was:<200>)
+            --><exclude>org/jboss/resteasy/test/security/BasicAuthTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/security/SecurityContextTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/security/SslServerWithCorrectCertificateTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/security/SslServerWithWrongHostnameCertificateTest.java</exclude>
+
+            <!-- fails todo There are multiple deployed archives.  Different binding addresses not handled
+                    (java.util.concurrent.ExecutionException:
+                    java.net.BindException: Address already in use)
+            --><exclude>org/jboss/resteasy/test/security/TwoSecurityDomainsTest.java</exclude>
+
+            <!-- fails todo (expected:<403> but was:<200>)
+            --><exclude>org/jboss/resteasy/test/security/CustomForbiddenMessageTest.java</exclude>
+
+            <!-- --><exclude>org/jboss/resteasy/test/rx/RxCompletionStageProxyTest.java</exclude>
+            <!-- fails todo (javax.ws.rs.NotFoundException: HTTP 404 Not Found)
+            --><exclude>org/jboss/resteasy/test/rx/RxCompletionStageAsyncClientAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/RxCompletionStageServerAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/RxCompletionStageTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/RxCompletionStageClientAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/RxCompletionStageProxyClientAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/RxCompletionStageProxyServerAsyncTest.java</exclude>
+            <!-- fails todo ()
+            --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2SingleTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2SingleProxyTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2ObservableServerAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2SingleProxyClientAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2SingleProxyServerAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2FlowableProxyTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2FlowableTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2FlowableServerAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2FlowableProxyServerAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2SingleClientAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2ObservableSSECompatibilityTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2ObservableProxyTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2SingleServerAsyncTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2FlowableSSECompatibilityTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2ObservableTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/rx/rxjava2/NoStreamRx2Test.java</exclude>
+            <!-- fails todo (arquillian annotation)
+            --><exclude>org/jboss/resteasy/test/rx/rxjava2/Rx2ObservableProxyServerAsyncTest.java</exclude>
+
+
+            <!-- ############## injection, form  ####################
+              dir: org/jboss/resteasy/test/injection
+                   org/jboss/resteasy/test/form
+                     12 total test
+                     12 tests ran successfully
+                      0tests failed
+            ################################################## -->
+            <!-- --><exclude>org/jboss/resteasy/test/injection/PostConstructInjectionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/FormEntityTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/CollectionsFormTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/FormParameterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/FormResourceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/FormUrlEncodedTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/Resteasy1405Test.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/FormUrlEncodedCharsetTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/ComplexFormTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/FormBodyResourceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/FormParamPutTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/form/NestedCollectionsFormTest.java</exclude>
+
+
+            <!-- ############## cache, microprofile  ####################
+              dir: org/jboss/resteasy/test/cache
+                     7 total test
+                     4 tests ran successfully
+                     3 tests failed
+            ################################################## -->
+            <!-- --><exclude>org/jboss/resteasy/test/cache/ServerCacheInterceptorTest.java</exclude>
+
+            <!-- fails todo (test failing)
+            --><exclude>org/jboss/resteasy/test/microprofile/config/MicroProfileConfigServletContextListenerTest.java</exclude>
+            <!-- fails todo
+            --><exclude>org/jboss/resteasy/test/microprofile/config/MicroProfileConfigServletTest.java</exclude>
+            <!-- fails todo
+            --><exclude>org/jboss/resteasy/test/microprofile/config/MicroProfileConfigFilterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/microprofile/config/MicroProfileConfigUseGlobalTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/microprofile/restclient/RestClientProxyTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/microprofile/restclient/RestClientProxyRedeployTest.java</exclude>
+
+
+
+            <!-- ############## cdi  ####################
+              dir: org/jboss/resteasy/test/cdi
+                     38 total test
+                     29 tests ran successfully
+                      9 tests failed
+            ################################################## -->
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/injection/InjectionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/injection/InjectionJpaEnumTypeTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/injection/ReverseInjectionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/injection/NonProxyableProviderTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/injection/MDBInjectionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/injection/LazyInitUriInfoInjectionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/injection/WeldSubdeploymentTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/modules/WarLibIntoWarClassesTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/modules/WarClassesIntoWarLibTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/modules/EjbjarLibIntoWarLibTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/modules/EarLibIntoEarLibTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/modules/EarLibIntoWarLibTest.java</exclude>
+            <!-- fails todo (NotFound HTTP 404 Not Found)
+            --><exclude>org/jboss/resteasy/test/cdi/basic/SingletonTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/basic/EventsTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/basic/EJBTest.java</exclude>
+            <!-- fails todo (expected:<200> but was:<404>)
+            --><exclude>org/jboss/resteasy/test/cdi/basic/EjbExceptionUnwrapTest.java</exclude>
+            <!-- fails todo (expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/cdi/basic/OutOfBandTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/basic/AsynchronousCdiTest.java</exclude>
+            <!-- fails todo (expected:<1> but was:<0>)
+            --><exclude>org/jboss/resteasy/test/cdi/basic/ApplicationInjectionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/basic/DecoratorsTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/basic/BeanReaderWriterTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/basic/EJBEventsTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/basic/CDILocatorTest.java</exclude>
+            <!-- fails todo (java.nio.file.NoSuchFileException:
+                /home/rsearls/project/feb5-full-int-tests/target/jbossas-managed/
+                deployments/RESTEASY-1082.war)
+            --><exclude>org/jboss/resteasy/test/cdi/basic/CDIResourceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/extensions/BeanExtensionTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/extensions/ScopeExtensionTest.java</exclude>
+            <!-- fails todo (expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/cdi/generic/ConcreteDecoratorTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/ejb/EJBCDIValidationEJBProxyTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/ejb/EJBCDIValidationTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/validation/ValidationWithCDITest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/UtilitiesTest.java</exclude>
+            <!-- fails todo (expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/cdi/interceptors/InterceptorTest.java</exclude>
+            <!-- fails todo (expected:<200> but was:<500>)
+            --><exclude>org/jboss/resteasy/test/cdi/interceptors/TimerInterceptorTest.java</exclude>
+            <!-- fails todo (expected:<[in-test-ou]t> but was:<[tes]t>)
+            --><exclude>org/jboss/resteasy/test/cdi/interceptors/NameBoundCDIProxiesTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/inheritence/AlternativeSelectedInheritanceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/inheritence/VanillaInheritanceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/inheritence/AlternativeVanillaInheritanceTest.java</exclude>
+            <!-- --><exclude>org/jboss/resteasy/test/cdi/inheritence/SpecializedInheritanceTest.java</exclude>
+
+
+            <!--
+                <exclude>org/jboss/resteasy/test/validation/**</exclude>
+          -->
+
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>native</id>
+      <activation>
+        <property>
+          <name>native</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${surefire-plugin.version}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+                <configuration>
+                  <systemProperties>
+                    <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                  </systemProperties>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <properties>
+        <quarkus.package.type>native</quarkus.package.type>
+      </properties>
+    </profile>
+  </profiles>
+</project>

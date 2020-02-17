@@ -1,0 +1,8 @@
+# Configuration file
+# key = value
+%test.quarkus.log.console.enable=true
+%test.quarkus.log.console.format=%d{HH:mm:ss} %-5p [%c{2.}] (%t) %s%e%n
+%test.quarkus.log.console.level=ALL
+%test.quarkus.log.console.color=false
+
+%test.quarkus.log.category."io.quarkus".level=DEBUG
