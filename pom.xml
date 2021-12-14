@@ -36,7 +36,7 @@
         Version upgrade fixed issue
     <version.log4j>2.9.1</version.log4j>
     -->
-    <version.log4j>2.10.0</version.log4j>
+    <version.log4j>2.16.0</version.log4j>
     <version.io.undertow>2.0.23.Final</version.io.undertow>
     <version.eclipse.jdt>3.5.0</version.eclipse.jdt>
     <version.testng>6.9.9</version.testng>
