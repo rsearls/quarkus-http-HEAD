@@ -34,7 +34,7 @@
         java.util.ServiceConfigurationError: org.apache.logging.log4j.spi.Provider
         : org.apache.logging.log4j.core.impl.Log4jProvider not a subtype
         Version upgrade fixed issue
-    <version.log4j>2.9.1</version.log4j>
+    <version.log4j>2.15.0</version.log4j>
     -->
     <version.log4j>2.10.0</version.log4j>
     <version.io.undertow>2.0.23.Final</version.io.undertow>
