@@ -41,7 +41,7 @@
     <version.eclipse.jdt>3.5.0</version.eclipse.jdt>
     <version.testng>6.9.9</version.testng>
     <version.org.jboss.resteasy.tracing.api>1.0.0.Beta4</version.org.jboss.resteasy.tracing.api>
-    <version.com.fasterxml.jackson>2.10.1</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson>2.13.4.1</version.com.fasterxml.jackson>
     <version.org.wildfly.extras.creaper>1.6.1</version.org.wildfly.extras.creaper>
     <version.jboss.dmr>1.5.0.Final</version.jboss.dmr>
     <version.wildfly.controller.client>7.0.0.Final</version.wildfly.controller.client>
